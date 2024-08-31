@@ -30,12 +30,12 @@ import cors from 'cors';
 import helmetConfiguration from './configuration/helmet.configuration.js';
 import corsConfiguration from './configuration/cors.configuration.js';
 import compressionConfiguration from './configuration/compression.configuration.js';
-import sanitizeRequestConfiguration from './configuration/sanitizeRequest.configuration.js';
-
+import morganConfiguration from './configuration/morgan.configuration.js';
 import appRoutes from './routes.js';
+
+import sanitizeRequestConfiguration from './configuration/sanitizeRequest.configuration.js';
 import errorHandlingService from './service/errorHandling.service.js';
 import hppConfiguration from './configuration/hpp.configuration.js';
-import morganConfiguration from './configuration/morgan.configuration.js';
 
 const app = express();
 
