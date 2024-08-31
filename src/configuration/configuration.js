@@ -1,18 +1,5 @@
 'use strict';
 
-/**
- * @fileoverview This module configures and validates environment variables for the application
- * using dotenv and Joi. It imports configurations, applies environment-specific settings,
- * and validates all environmental variables against a schema to ensure they meet the required
- * format and values before the application runs. The module helps prevent runtime errors due
- * to misconfiguration and facilitates easier management of configuration settings across
- * different deployment environments (development, testing, staging, production).
- *
- * @requires module:dotenv Used to load and parse environment variables from a .env file.
- * @requires module:joi Used for schema description and environment validation.
- * @requires module:constant/envTypes.constants Constants defining environment types.
- */
-
 import dotenv from 'dotenv';
 import Joi from 'joi';
 
@@ -60,18 +47,6 @@ const mongoDbUrl =
     getEnvVar(process.env.MONGODB_URL, '') +
     (process.env.NODE_ENV === environment.TEST ? '-test' : '');
 
-/**
- * Defines a schema for validating environment variables using Joi. This schema ensures that all necessary
- * environment variables are not only present but also conform to expected formats and values. Each variable
- * is thoroughly defined with requirements such as data type, allowed values, and mandatory status. This
- * validation schema is crucial for maintaining the integrity and consistency of the application's configuration,
- * preventing runtime errors caused by misconfiguration or missing environment variables.
- *
- * The schema includes validations for various operational parameters such as the application environment, server port,
- * database URLs, authentication tokens, CORS settings, rate limiting, SMTP details for email sending, and more. It ensures
- * that all configurations are correctly set according to the operational requirements of different environments like
- * development, testing, staging, or production.
- */
 const envVarsSchema = Joi.object({
     NODE_ENV: Joi.string()
         .valid(
@@ -91,63 +66,17 @@ const envVarsSchema = Joi.object({
         .description('The API version to use.'),
     PORT: Joi.number().required().description('The server port.'),
     MONGODB_URL: Joi.string().required().description('MongoDB URL.'),
-    JWT_SECRET: Joi.string().required().description('JWT secret key.'),
-    JWT_ACCESS_EXPIRATION_MINUTES: Joi.number()
-        .required()
-        .description('Minutes after which access tokens expire.'),
-    JWT_REFRESH_EXPIRATION_DAYS: Joi.number()
-        .required()
-        .description('Days after which refresh tokens expire.'),
-    JWT_RESET_PASSWORD_EXPIRATION_MINUTES: Joi.number()
-        .required()
-        .description('Minutes after which reset password token expires.'),
-    JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number()
-        .required()
-        .description('Minutes after which verify email token expires.'),
-    BASIC_TOKEN: Joi.string()
-        .required()
-        .description('Basic token for authentication.'),
-    MAXIMUM_LOGIN_ATTEMPTS: Joi.number()
-        .required()
-        .description('Maximum number of login attempts.'),
-    MAXIMUM_RESET_PASSWORD_ATTEMPTS: Joi.number()
-        .required()
-        .description('Maximum number of reset password attempts.'),
-    MAXIMUM_VERIFY_EMAIL_ATTEMPTS: Joi.number()
-        .required()
-        .description('Maximum number of verify email attempts.'),
-    MAXIMUM_CHANGE_EMAIL_ATTEMPTS: Joi.number()
-        .required()
-        .description('Maximum number of change email attempts.'),
-    MAXIMUM_CHANGE_PASSWORD_ATTEMPTS: Joi.number()
-        .required()
-        .description('Maximum number of change password attempts.'),
-    MAXIMUM_ACTIVE_SESSIONS: Joi.number()
-        .required()
-        .description('Maximum number of active sessions.'),
-    LOCK_DURATION_HOUR: Joi.number()
-        .required()
-        .description('Duration in hours to lock the account.'),
     TIMEOUT_IN_SECONDS: Joi.number()
         .required()
         .description('Timeout in seconds.'),
     CACHE_TTL_IN_SECONDS: Joi.number()
         .required()
         .description('Cache TTL in seconds.'),
-    JSON_PAYLOAD_LIMIT: Joi.number()
-        .required()
-        .description('JSON payload limit in bytes.'),
     CORS_ORIGIN: Joi.string()
         .uri({ scheme: ['http', 'https'] })
         .required()
         .description('CORS origin.'),
     CORS_METHODS: Joi.string().required().description('CORS methods.'),
-    RATE_LIMIT_WINDOW_MS: Joi.number()
-        .required()
-        .description('Rate limit window in milliseconds.'),
-    RATE_LIMIT_MAX: Joi.number()
-        .required()
-        .description('Maximum number of requests per rate limit window.'),
     SMTP_HOST: Joi.string()
         .required()
         .description('Server that will send the emails.'),
@@ -168,18 +97,6 @@ const envVarsSchema = Joi.object({
         .description('The "from" field in the emails sent by the app.'),
     ADMIN_EMAIL: Joi.string().email().required().description('Admin email.'),
     ADMIN_PASSWORD: Joi.string().required().description('Admin password.'),
-    GOOGLE_DRIVE_SCOPE: Joi.string()
-        .required()
-        .description('Scope for Google Drive API.'),
-    GOOGLE_DRIVE_CLIENT_EMAIL: Joi.string()
-        .required()
-        .description('Client email for Google Drive API.'),
-    GOOGLE_DRIVE_PRIVATE_KEY: Joi.string()
-        .required()
-        .description('Private key for Google Drive API.'),
-    GOOGLE_DRIVE_FOLDER_KEY: Joi.string()
-        .required()
-        .description('Folder key for Google Drive API.'),
     AUTH_SERVICE_BASE_URL: Joi.string()
         .required()
         .description('Authentication service base URL.'),
@@ -217,43 +134,10 @@ const configuration = {
     mongoose: {
         url: mongoDbUrl,
     },
-    jwt: {
-        secret: getEnvVar(envVars.JWT_SECRET, 'defaultSecret'),
-        accessExpirationMinutes: getInt(
-            envVars.JWT_ACCESS_EXPIRATION_MINUTES,
-            30
-        ),
-        refreshExpirationDays: getInt(envVars.JWT_REFRESH_EXPIRATION_DAYS, 30),
-        resetPasswordExpirationMinutes: getInt(
-            envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
-            10
-        ),
-        verifyEmailExpirationMinutes: getInt(
-            envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
-            10
-        ),
-    },
-    auth: {
-        basicToken: getEnvVar(envVars.BASIC_TOKEN, 'defaultBasicToken'),
-        loginAttempts: getInt(envVars.MAXIMUM_LOGIN_ATTEMPTS, 5),
-        resetPasswordAttempts: getInt(
-            envVars.MAXIMUM_RESET_PASSWORD_ATTEMPTS,
-            5
-        ),
-        verifyEmailAttempts: getInt(envVars.MAXIMUM_VERIFY_EMAIL_ATTEMPTS, 5),
-        changeEmailAttempts: getInt(envVars.MAXIMUM_CHANGE_EMAIL_ATTEMPTS, 5),
-        changePasswordAttempts: getInt(
-            envVars.MAXIMUM_CHANGE_PASSWORD_ATTEMPTS,
-            5
-        ),
-        activeSessions: getInt(envVars.MAXIMUM_ACTIVE_SESSIONS, 3),
-        lockDuration: getInt(envVars.LOCK_DURATION_HOUR, 1),
-    },
     timeout: getInt(envVars.TIMEOUT_IN_SECONDS, 30),
     cache: {
         timeout: getInt(envVars.CACHE_TTL_IN_SECONDS, 60),
     },
-    jsonPayloadLimit: getInt(envVars.JSON_PAYLOAD_LIMIT, 1000000),
     cors: {
         origin: getEnvVar(envVars.CORS_ORIGIN, '')
             .split(',')
@@ -261,10 +145,6 @@ const configuration = {
         methods: getEnvVar(envVars.CORS_METHODS, '')
             .split(',')
             .map((method) => method.trim()),
-    },
-    rateLimit: {
-        windowMs: getInt(envVars.RATE_LIMIT_WINDOW_MS, 60000),
-        max: getInt(envVars.RATE_LIMIT_MAX, 100),
     },
     email: {
         smtp: {
@@ -284,12 +164,6 @@ const configuration = {
     admin: {
         email: getEnvVar(envVars.ADMIN_EMAIL, 'admin@example.com'),
         password: getEnvVar(envVars.ADMIN_PASSWORD, ''),
-    },
-    googleDrive: {
-        scope: getEnvVar(envVars.GOOGLE_DRIVE_SCOPE, ''),
-        client: getEnvVar(envVars.GOOGLE_DRIVE_CLIENT_EMAIL, ''),
-        privateKey: getEnvVar(envVars.GOOGLE_DRIVE_PRIVATE_KEY, ''),
-        folderKey: getEnvVar(envVars.GOOGLE_DRIVE_FOLDER_KEY, ''),
     },
     services: {
         authentication: getEnvVar(envVars.AUTH_SERVICE_BASE_URL, ''),
