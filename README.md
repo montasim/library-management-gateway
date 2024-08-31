@@ -1,16 +1,6 @@
-[//]: # 'NODE EXPRESS BOILERPLATE'
+[//]: # 'LIBRARY MANAGEMENT GATEWAY'
 
-# <img loading="lazy" src="https://readme-typing-svg.demolab.com?font=Poppins&weight=700&size=24&duration=1&pause=1&color=EB008B&center=true&vCenter=true&repeat=false&width=335&height=40&lines=NODE+EXPRESS+BOILERPLATE" alt="LIBRARY MANAGEMENT SYSTEM SERVER" />
-
-[![]()]()
-
-<!-- GitHub actions badges start -->
-<div>
-    <img loading="lazy" alt="Continuous Integration" src="https://github.com/montasim/library-management-gateway/actions/workflows/ci.yml/badge.svg?labelColor=EB008B&color=00B8B5">
-    <img loading="lazy" alt="Build on Merge" src="https://github.com/montasim/library-management-gateway/actions/workflows/build-on-merge.yml/badge.svg?labelColor=EB008B&color=00B8B5">
-    <img loading="lazy" alt="Automated Release Workflow for PR Merges" src="https://github.com/montasim/library-management-gateway/actions/workflows/create-release.yml/badge.svg?labelColor=EB008B&color=00B8B5">
-</div>
-<!-- GitHub actions badges end -->
+# <img loading="lazy" src="https://readme-typing-svg.demolab.com?font=Poppins&weight=700&size=24&duration=1&pause=1&color=EB008B&center=true&vCenter=true&repeat=false&width=405&height=40&lines=LIBRARY+MANAGEMENT+GATEWAY" alt="LIBRARY MANAGEMENT GATEWAY" />
 
 <!-- repository summary badges start -->
 <div>
@@ -57,66 +47,15 @@ A boilerplate/starter project for quickly building RESTful APIs using Node.js, E
 
 ## <img loading="lazy" src="https://readme-typing-svg.demolab.com?font=Poppins&weight=700&size=20&duration=1&pause=1&color=00B8B5&center=true&vCenter=true&repeat=false&width=120&height=40&lines=1.+FEATURES" alt="1. FEATURES" id="1-features" />
 
-1. Authentication:
+Get the auth request and send to the corresponding service. Can handle the following request.
 
-    - Handles user login, logout, password resets, and email verification processes.
-    - Ensures secure access through bearer token authentication.
-
-2. User Profile Management:
-
-    - Facilitates fetching and updating user profile information based on username. Respects privacy settings and only returns allowed information.
-
-3. Permission and Role Management:
-
-    - Manages permissions and roles within the system, allowing for the creation of new roles, modification of existing ones, and deletion of roles based on IDs.
-
-4. Error and Request Handling:
-
-    - Includes comprehensive handling of unsupported methods and detailed error responses to ensure robustness and reliability of the API.
-
-### APIs
-
-1. User
-    - Auth
-        - Signup: `POST /api/{{VERSION}}/auth/signup`
-        - Verify signup using email: `GET /api/{{VERSION}}/auth/verify/verification-token`
-        - Login: `POST /api/{{VERSION}}/auth/login`
-        - Request password reset email: `PUT /api/{{VERSION}}/auth/request-new-password`
-        - Resend password reset email: `PUT /api/{{VERSION}}/auth/resend-verification/verification-token`
-        - Reset password: `PUT /api/{{VERSION}}/auth/reset-password/verification-token`
-        - Logout: `GET /api/{{VERSION}}/auth/logout`
-    - Profile
-        - Update personal information:
-        - Reset password:
-        - Delete account:
-2. Admin
-    - Admin
-        - Create admin: `POST /api/{{VERSION}}/admin`
-        - Verify admin request using email: `GET /api/{{VERSION}}/admin/verify/verification-token`
-        - Admin Login: `/api/{{VERSION}}/admin/login`
-        - Request password reset email: `PUT /api/{{VERSION}}/admin/request-new-password`
-        - Resend password reset email: `GET /api/{{VERSION}}/admin/resend-verification/token-id`
-        - Reset password: `PUT /api/{{VERSION}}/admin/reset-password/verification-token`
-        - Logout: `GET /api/{{VERSION}}/admin/logout`
-    - Permission
-        - Create permission: `POST /api/{{VERSION}}/permissions`
-        - Create default permission: `POST /api/{{VERSION}}/permissions/default`
-        - Get all permissions: `GET /api/{{VERSION}}/permissions`
-        - Get permission by ID: `GET /api/{{VERSION}}/permissions/permission-id`
-        - Update permission by ID: `PUT /api/{{VERSION}}/permissions/permission-id`
-        - Delete permission by ID: `DELETE /api/{{VERSION}}/permissions/permission-id`
-        - Delete permission by list: `DELETE /api/{{VERSION}}/permissions?ids=permission-id1,permission-id2`
-    - Role
-        - Create role: `POST /api/{{VERSION}}/roles`
-        - Create default role: `POST /api/{{VERSION}}/roles/default`
-        - Get all roles: `GET /api/{{VERSION}}/roles`
-        - Get role by ID: `GET /api/{{VERSION}}/roles/role-id`
-        - Update role by ID: `PUT /api/{{VERSION}}/roles/role-id`
-        - Delete role by ID: `DELETE /api/{{VERSION}}/roles/role-id`
-        - Delete role by list: `DELETE /api/{{VERSION}}/roles?ids=role-id1,role-id2`
-3. Public
-    - Detect
-        - User device detection
+1. Signup
+2. Verify email
+3. Resend email verification
+4. Request new password
+5. Reset password
+6. Login
+7. Logout
 
 <br/>
 
@@ -386,8 +325,6 @@ Vercel is the recommended option for hosting the files since it is free and easy
 
 ## <img loading="lazy" src="https://readme-typing-svg.demolab.com?font=Poppins&weight=700&size=20&duration=1&pause=1&color=00B8B5&center=true&vCenter=true&repeat=false&width=115&height=40&lines=9.+ARTICLES" alt="9. ARTICLES" id="9-articles" />
 
-1. [StackOverflow answer on file upload to Google Drive](https://stackoverflow.com/questions/65181932/how-i-can-upload-file-to-google-drive-with-google-drive-api).
-
 <br/>
 
 [//]: # '10. DO NOT FORGET TO DO'
@@ -399,8 +336,6 @@ Vercel is the recommended option for hosting the files since it is free and easy
 [//]: # '11. TUTORIALS'
 
 ## <img loading="lazy" src="https://readme-typing-svg.demolab.com?font=Poppins&weight=700&size=20&duration=1&pause=1&color=00B8B5&center=true&vCenter=true&repeat=false&width=135&height=40&lines=11.+TUTORIALS" alt="11. TUTORIALS" id="11-tutorials" />
-
-1. [Google Drive file upload tutorial](https://www.youtube.com/watch?v=bkaQTLCBBeo&t=600s).
 
 <br/>
 
