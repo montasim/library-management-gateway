@@ -1,29 +1,15 @@
-/**
- * @fileoverview This file is the main entry point for the server application. It initializes
- * services like the email and database services, sets up error handling for uncaught exceptions
- * and unhandled promise rejections, and starts the server based on the configuration. It also
- * handles server shutdown gracefully by responding to system termination signals.
- *
- * @requires module:app The main Express application module.
- * @requires module:configuration/configuration Application-specific configuration details.
- * @requires module:service/email.service Email service to handle email operations.
- * @requires module:service/database.service Database service for database connection and operations.
- * @requires module:utilities/handleServerError Utility to handle server-related errors.
- * @requires module:utilities/shutdownHandler Utility to handle graceful shutdown of the server.
- * @requires module:utilities/handleUncaughtException Utility to handle uncaught exception errors.
- * @requires module:utilities/handleUnhandledRejection Utility to handle unhandled promise rejections.
- * @requires module:service/logger.service Logger service for logging information and errors.
- */
+'use strict';
+
 import app from './src/app.js';
 
 import configuration from './src/configuration/configuration.js';
 import EmailService from './src/service/email.service.js';
-import DatabaseService from './src/service/database.service.js';
+import loggerService from './src/service/logger.service.js';
+
 import handleServerError from './src/utilities/handleServerError.js';
 import shutdownHandler from './src/utilities/shutdownHandler.js';
 import handleUncaughtException from './src/utilities/handleUncaughtException.js';
 import handleUnhandledRejection from './src/utilities/handleUnhandledRejection.js';
-import loggerService from './src/service/logger.service.js';
 
 /**
  * Starts the server by connecting to necessary services like Email and Database,
@@ -38,7 +24,6 @@ import loggerService from './src/service/logger.service.js';
 const startServer = async () => {
     try {
         await EmailService.connect();
-        await DatabaseService.connect();
 
         // Uppercase the first letter of the environment
         const envCapitalized =
