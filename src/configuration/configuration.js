@@ -180,6 +180,9 @@ const envVarsSchema = Joi.object({
     GOOGLE_DRIVE_FOLDER_KEY: Joi.string()
         .required()
         .description('Folder key for Google Drive API.'),
+    AUTH_SERVICE_BASE_URL: Joi.string()
+        .required()
+        .description('Authentication service base URL.'),
 }).unknown();
 
 const { value: envVars, error } = envVarsSchema.validate(process.env, {
@@ -287,6 +290,9 @@ const configuration = {
         client: getEnvVar(envVars.GOOGLE_DRIVE_CLIENT_EMAIL, ''),
         privateKey: getEnvVar(envVars.GOOGLE_DRIVE_PRIVATE_KEY, ''),
         folderKey: getEnvVar(envVars.GOOGLE_DRIVE_FOLDER_KEY, ''),
+    },
+    services: {
+        authentication: getEnvVar(envVars.AUTH_SERVICE_BASE_URL, ''),
     },
 };
 
