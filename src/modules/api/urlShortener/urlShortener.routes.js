@@ -11,12 +11,20 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(proxyMiddleware(configuration.services.urlShortener, '/', '/api/v1/'))
-    .all(methodNotSupported);
-
-router
-    .route('/')
-    .get(proxyMiddleware(configuration.services.urlShortener, '/', '/api/v1/'))
+    .post(
+        proxyMiddleware(
+            configuration.services.urlShortener,
+            '/url-shortener',
+            '/api/v1/'
+        )
+    )
+    .get(
+        proxyMiddleware(
+            configuration.services.urlShortener,
+            '/url-shortener',
+            '/api/v1/'
+        )
+    )
     .all(methodNotSupported);
 
 router
@@ -24,7 +32,7 @@ router
     .get(
         proxyMiddleware(
             configuration.services.urlShortener,
-            '/:shortId',
+            '/url-shortener/:shortId',
             '/api/v1/:shortId'
         )
     )
