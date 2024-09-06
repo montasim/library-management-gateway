@@ -17,7 +17,7 @@
 
 <br/>
 
-A boilerplate/starter project for quickly building RESTful APIs using Node.js, Express, and Mongoose.
+The gateway service for the library management system. This service is responsible for handling all the requests and sending them to the corresponding service.
 
 [//]: # 'CONTENTS'
 
