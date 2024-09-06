@@ -6,11 +6,11 @@ import httpStatus from '../constant/httpStatus.constants.js';
 import environment from '../constant/envTypes.constants.js';
 import contentTypeConstants from '../constant/contentType.constants.js';
 
-const proxyMiddleware = (requestedUrl) => {
+const proxyMiddleware = (target, requestedUrl, redirectUrl) => {
     return createProxyMiddleware({
-        target: configuration.services.authentication,
+        target,
         changeOrigin: true,
-        pathRewrite: { [`^/${requestedUrl}`]: `/api/v1/auth/${requestedUrl}` },
+        pathRewrite: { [`^${requestedUrl}`]: redirectUrl },
 
         onProxyReq: (proxyReq, req, res) => {
             loggerService.info(

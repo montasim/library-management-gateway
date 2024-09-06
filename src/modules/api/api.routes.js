@@ -8,12 +8,14 @@
 
 import express from 'express';
 
-import authRoutes from './auth/auth.routes.js';
 import routesConstants from '../../constant/routes.constants.js';
+import authRoutes from './auth/auth.routes.js';
+import urlShortenerRoutes from './urlShortener/urlShortener.routes.js';
 
 const router = express.Router();
 
 // Application routes
 router.use(`/${routesConstants.auth.routes}`, authRoutes);
+router.use(`/${routesConstants.urlShortener.routes}`, urlShortenerRoutes);
 
 export default router;

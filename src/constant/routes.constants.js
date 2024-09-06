@@ -32,6 +32,9 @@ const routesConstants = {
     auth: {
         routes: 'auth',
     },
+    urlShortener: {
+        routes: 'url-shortener',
+    },
     detect: {
         routes: 'detect',
     },
