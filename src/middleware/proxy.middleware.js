@@ -10,7 +10,15 @@ const proxyMiddleware = (target, requestedUrl, redirectUrl) => {
     return createProxyMiddleware({
         target,
         changeOrigin: true,
-        pathRewrite: { [`^${requestedUrl}`]: redirectUrl },
+        pathRewrite: (path, req) => {
+            // If redirectUrl is a function, call it to get the final URL
+            if (typeof redirectUrl === 'function') {
+                return redirectUrl(req);
+            }
+
+            // Otherwise, apply standard path rewrite
+            return path.replace(new RegExp(`^${requestedUrl}`), redirectUrl);
+        },
 
         onProxyReq: (proxyReq, req, res) => {
             loggerService.info(

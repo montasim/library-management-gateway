@@ -26,15 +26,15 @@ router
     .post(
         proxyMiddleware(
             configuration.services.urlShortener,
-            `/${routesConstants.urlShortener.routes}`,
-            `${configuration.services.urlShortener}/api/v1/`
+            '/url-shortener',
+            '/api/v1/url-shortener'
         )
     )
     .get(
         proxyMiddleware(
             configuration.services.urlShortener,
-            `/${routesConstants.urlShortener.routes}`,
-            `${configuration.services.urlShortener}/api/v1/`
+            '/url-shortener',
+            '/api/v1/url-shortener'
         )
     )
     .all(methodNotSupported);
@@ -45,8 +45,8 @@ router
     .get(
         proxyMiddleware(
             configuration.services.urlShortener,
-            `/${routesConstants.urlShortener.routes}/:shortId`,
-            `${configuration.services.urlShortener}/api/v1/:shortId`
+            `/${routesConstants.urlShortener.routes}/:shortId`, // Updated the requested URL pattern
+            (req) => `/api/v1/url-shortener/${req.params.shortId}` // Target path includes the dynamic shortId
         )
     )
     .all(methodNotSupported);
