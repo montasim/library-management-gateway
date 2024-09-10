@@ -106,6 +106,9 @@ const envVarsSchema = Joi.object({
     SEND_EMAIL_SERVICE_BASE_URL: Joi.string()
         .required()
         .description('Send email service base URL.'),
+    MICROSERVICE_USES_TRACKER_BASE_URL: Joi.string()
+        .required()
+        .description('Microservice uses tracker service base URL.'),
 }).unknown();
 
 const { value: envVars, error } = envVarsSchema.validate(process.env, {
@@ -175,6 +178,10 @@ const configuration = {
         authentication: getEnvVar(envVars.AUTH_SERVICE_BASE_URL, ''),
         urlShortener: getEnvVar(envVars.URL_SHORTENER_SERVICE_BASE_URL, ''),
         sendEmail: getEnvVar(envVars.SEND_EMAIL_SERVICE_BASE_URL, ''),
+        microserviceUsesTracker: getEnvVar(
+            envVars.MICROSERVICE_USES_TRACKER_BASE_URL,
+            ''
+        ),
     },
 };
 
