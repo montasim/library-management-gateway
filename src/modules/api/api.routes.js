@@ -71,6 +71,24 @@ router
             '/api/v1/uses-tracker'
         )
     )
+    .get(
+        proxyMiddleware(
+            configuration.services.microserviceUsesTracker,
+            '/uses-tracker',
+            '/api/v1/uses-tracker'
+        )
+    )
+    .all(methodNotSupported);
+
+router
+    .route(`/${routesConstants.usesTracker.routes}/by-status`)
+    .get(
+        proxyMiddleware(
+            configuration.services.microserviceUsesTracker,
+            '/uses-tracker/by-status',
+            '/api/v1/uses-tracker/by-status'
+        )
+    )
     .all(methodNotSupported);
 
 export default router;

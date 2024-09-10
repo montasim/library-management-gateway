@@ -10,71 +10,84 @@ const proxyMiddleware = (target, requestedUrl, redirectUrl) => {
     return createProxyMiddleware({
         target,
         changeOrigin: true,
+
+        // Path rewrite logic
         pathRewrite: (path, req) => {
-            // If redirectUrl is a function, call it to get the final URL
             if (typeof redirectUrl === 'function') {
                 return redirectUrl(req);
             }
-
-            // Otherwise, apply standard path rewrite
             return path.replace(new RegExp(`^${requestedUrl}`), redirectUrl);
         },
 
-        onProxyReq: (proxyReq, req, res) => {
-            loggerService.info(
-                `Proxying request: ${req.method} ${req.originalUrl}`
-            );
-        },
-
-        onError: (error, req, res) => {
-            const errorType = error.code
-                ? `Proxy Error (${error.code})`
-                : 'Proxy Error';
-            const errorMessage =
-                configuration.env !== environment.PRODUCTION
-                    ? `Error Message: ${error.message}`
-                    : 'Internal Server Error.';
-            const errorData = {
-                timeStamp: new Date(),
-                success: false,
-                data: {},
-                message: errorMessage,
-                status: error.status || httpStatus.INTERNAL_SERVER_ERROR,
-            };
-
-            loggerService.error(`${errorType}: ${errorMessage}`);
-
-            res.status(errorData.status).send(errorData);
-        },
-
-        onProxyRes: (proxyRes, req, res) => {
-            if (proxyRes.statusCode !== httpStatus.OK) {
-                loggerService.warn(
-                    `Received ${proxyRes.statusCode} from ${req.originalUrl}`
+        // This function intercepts the request before it's forwarded to the target
+        on: {
+            proxyReq: (proxyReq, req, res) => {
+                loggerService.info(
+                    `Proxying request: ${req.method} ${req.originalUrl}`
                 );
-            }
-        },
+            },
 
-        onProxyReqWs: (proxyReqWs, req, socket, options, head) => {
-            loggerService.debug(
-                `Websocket request proxied: ${req.originalUrl}`
-            );
-        },
+            // This function handles the response from the proxy target
+            proxyRes: (proxyRes, req, res) => {
+                let body = ''; // Buffer to collect response chunks
 
-        onProxyError: (err, req, res) => {
-            const errorMsg =
-                configuration.env !== environment.PRODUCTION
-                    ? `Websocket error: ${err.message}`
-                    : 'A websocket error occurred.';
+                // Collect response chunks
+                proxyRes.on('data', (chunk) => {
+                    body += chunk;
+                });
 
-            loggerService.error(errorMsg);
+                // After all data is received, modify or log the response
+                proxyRes.on('end', () => {
+                    try {
+                        const parsedData = body;
+                        loggerService.info(`Received response: ${body}`);
 
-            res.writeHead(httpStatus.INTERNAL_SERVER_ERROR, {
-                'Content-Type': contentTypeConstants.JSON,
-            });
-            res.end(
-                JSON.stringify({ error: 'Proxy error', message: errorMsg })
-            );
+                        // Modify the response if needed
+                        const modifiedData = {
+                            ...parsedData,
+                            extraInfo: 'Added by proxy',
+                        };
+                        // Send the modified data back to the client
+                        // res.status(modifiedData.status).send(modifiedData);
+                    } catch (err) {
+                        loggerService.error(
+                            `Error parsing response: ${err.message}`
+                        );
+                        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                            message: 'Error processing response from the proxy',
+                        });
+                    }
+                });
+            },
+
+            // This function handles errors during proxying
+            error: (error, req, res) => {
+                const errorMessage =
+                    configuration.env !== environment.PRODUCTION
+                        ? `Proxy Error: ${error.message}`
+                        : 'Internal Server Error';
+
+                loggerService.error(`Proxy Error: ${error.message}`);
+
+                // Send a custom error response
+                res.writeHead(httpStatus.INTERNAL_SERVER_ERROR, {
+                    'Content-Type': contentTypeConstants.JSON,
+                });
+
+                res.end(
+                    JSON.stringify({
+                        error: 'Proxy error',
+                        message: errorMessage,
+                    })
+                );
+            },
+
+            // WebSocket proxying
+            proxyReqWs: (proxyReqWs, req, socket, options, head) => {
+                loggerService.debug(
+                    `WebSocket request proxied: ${req.originalUrl}`
+                );
+            },
         },
     });
 };
