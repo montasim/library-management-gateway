@@ -103,6 +103,9 @@ const envVarsSchema = Joi.object({
     URL_SHORTENER_SERVICE_BASE_URL: Joi.string()
         .required()
         .description('URL shortener service base URL.'),
+    SEND_EMAIL_SERVICE_BASE_URL: Joi.string()
+        .required()
+        .description('Send email service base URL.'),
 }).unknown();
 
 const { value: envVars, error } = envVarsSchema.validate(process.env, {
@@ -171,6 +174,7 @@ const configuration = {
     services: {
         authentication: getEnvVar(envVars.AUTH_SERVICE_BASE_URL, ''),
         urlShortener: getEnvVar(envVars.URL_SHORTENER_SERVICE_BASE_URL, ''),
+        sendEmail: getEnvVar(envVars.SEND_EMAIL_SERVICE_BASE_URL, ''),
     },
 };
 

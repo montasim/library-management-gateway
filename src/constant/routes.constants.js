@@ -32,6 +32,9 @@ const routesConstants = {
     auth: {
         routes: 'auth',
     },
+    sendEmail: {
+        routes: 'send-email',
+    },
     urlShortener: {
         routes: 'url-shortener',
     },
