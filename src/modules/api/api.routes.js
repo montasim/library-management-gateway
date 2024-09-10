@@ -62,4 +62,15 @@ router
     )
     .all(methodNotSupported);
 
+router
+    .route(`/${routesConstants.usesTracker.routes}`)
+    .post(
+        proxyMiddleware(
+            configuration.services.microserviceUsesTracker,
+            '/uses-tracker',
+            '/api/v1/uses-tracker'
+        )
+    )
+    .all(methodNotSupported);
+
 export default router;

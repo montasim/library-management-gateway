@@ -38,6 +38,9 @@ const routesConstants = {
     urlShortener: {
         routes: 'url-shortener',
     },
+    usesTracker: {
+        routes: 'uses-tracker',
+    },
     detect: {
         routes: 'detect',
     },
