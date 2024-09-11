@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import configuration from '../configuration/configuration.js';
@@ -6,7 +7,14 @@ import httpStatus from '../constant/httpStatus.constants.js';
 import environment from '../constant/envTypes.constants.js';
 import contentTypeConstants from '../constant/contentType.constants.js';
 
-const proxyMiddleware = (target, requestedUrl, redirectUrl) => {
+import getMicroserviceNameByTarget from '../utilities/getMicroserviceNameByTarget.js';
+
+const proxyMiddleware = (
+    target,
+    requestedUrl,
+    redirectUrl,
+    microserviceName = getMicroserviceNameByTarget(target)
+) => {
     return createProxyMiddleware({
         target,
         changeOrigin: true,
@@ -37,21 +45,48 @@ const proxyMiddleware = (target, requestedUrl, redirectUrl) => {
                 });
 
                 // After all data is received, modify or log the response
-                proxyRes.on('end', () => {
+                proxyRes.on('end', async () => {
                     try {
-                        const parsedData = body;
-                        loggerService.info(`Received response: ${body}`);
+                        if (
+                            target !==
+                                configuration.services
+                                    .microserviceUsesTracker &&
+                            req.method !== 'GET'
+                        ) {
+                            const parsedData = JSON.parse(body);
+
+                            await axios.post(
+                                `${configuration.services.microserviceUsesTracker}/api/v1/uses-tracker`,
+                                {
+                                    serviceName: microserviceName,
+                                    method: req?.method,
+                                    route: req?.originalUrl,
+                                    status: parsedData?.status
+                                        ? parsedData?.status
+                                        : httpStatus.INTERNAL_SERVER_ERROR,
+                                    message: parsedData?.message
+                                        ? parsedData?.message
+                                        : 'No message',
+                                    reqBody: req?.body
+                                        ? req?.body
+                                        : 'No request body',
+                                    responseBody: body
+                                        ? body
+                                        : 'No response body',
+                                }
+                            );
+                        }
 
                         // Modify the response if needed
-                        const modifiedData = {
-                            ...parsedData,
-                            extraInfo: 'Added by proxy',
-                        };
+                        // const modifiedData = {
+                        //     ...parsedData,
+                        //     extraInfo: 'Added by proxy',
+                        // };
                         // Send the modified data back to the client
                         // res.status(modifiedData.status).send(modifiedData);
-                    } catch (err) {
+                    } catch (error) {
                         loggerService.error(
-                            `Error parsing response: ${err.message}`
+                            `Error parsing response: ${error.message}`
                         );
                         res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                             message: 'Error processing response from the proxy',
